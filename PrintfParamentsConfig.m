@@ -2,10 +2,10 @@ function [PrintfParament] = PrintfParamentsConfig
 
     %%画图类参数
     PrintfParament.ChirpIdx         = 1;
-    PrintfParament.AntennaIdx       = 2;
+    PrintfParament.AntennaIdx       = 1;
     PrintfParament.ChirpMapEn       = 1;
-    PrintfParament.RangeMapEn       = 1;
-    PrintfParament.RDMapEn          = 1;
+    PrintfParament.RangeMapEn       = 0;
+    PrintfParament.RDMapEn          = 0;
 
 
 end

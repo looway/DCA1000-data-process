@@ -9,7 +9,7 @@ numBits           = RadarParament.NumBits;
 isReal            = RadarParament.IsReal;
 
 %一帧数量:128(chirps) * 4(Rx) * 2(adc) * 256(samples) * 2(complex)
-Expected_Num_SamplesPerFrame = numSamplePerChirp*numLoops*numRX;  %理论上的全部的个数
+Expected_Num_SamplesPerFrame = numSamplePerChirp*numLoops*numRX * 2;  %理论上的全部的个数
 fp       = fopen(fileFullPath, 'r');
 
 if isReal == 1
@@ -34,10 +34,10 @@ if isReal == 1
     datatmp2 = datatmp2.';
 
 else
-    numChirps = round(fileSize/numSamplePerChirp/numRX);  %计算chirp数量
+    numChirps = round(fileSize/numSamplePerChirp/numRX/2);  %计算chirp数量
     fprintf("numChirps = %d\n", numChirps);
     %1642数据格式为非交织
-    datatmp2 = zeros(1, (fileSize)); 
+    datatmp2 = zeros(1, (fileSize/2)); 
     counter = 1;
     for i=1:4:fileSize-1
         datatmp2(1,counter) = DataTmp(i)+sqrt(-1)*DataTmp(i+2);

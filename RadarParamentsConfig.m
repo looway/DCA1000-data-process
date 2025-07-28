@@ -3,17 +3,17 @@
 
 function [RadarParament] = RadarParamentsConfig
         
-RadarParament.Numframe     = 512;        
-RadarParament.fadc         = 6e6;      
+RadarParament.Numframe     = 64;        
+RadarParament.fadc         = 5.5e6;      
 RadarParament.NumSample    = 256;      
-RadarParament.chirpSlop    = 19.988e12;         
-RadarParament.ChirpT       = 60-6;    %!!!!! 
-RadarParament.Idletime     = 5e-6;      %!!!!!
+RadarParament.chirpSlop    = 68e12;         
+RadarParament.ChirpT       = 58e-6;    %!!!!! 
+RadarParament.Idletime     = 7e-6;      %!!!!!
 RadarParament.IsReal       = 0;         %!!!!!
     
-RadarParament.NumTx        = 2;         %!!!!!      
+RadarParament.NumTx        = 1;         %!!!!!      
 RadarParament.NumRx        = 4;
-RadarParament.NumLoop_TDM  = 128;    %单帧下每个发射天线发射的chirp数
+RadarParament.NumLoop_TDM  = 64;    %单帧下每个发射天线发射的chirp数
 RadarParament.NumBits      = 16;     %ADC数据的位数
 RadarParament.NumIQ        = 2;      %是否为IQ两路采样？
 
@@ -23,7 +23,7 @@ RadarParament.Tc           = RadarParament.ChirpT + RadarParament.Idletime; %前
 RadarParament.Frametime    = RadarParament.Tc*RadarParament.NumLoop_TDM*RadarParament.NumTx;    %单帧发射时长。其实TDM和BPM是一样的。
 
 c                          = 3e8;
-RadarParament.fc           = 77e9; %Hz
+RadarParament.fc           = 77.94745e9; %Hz
 RadarParament.lambda       = c/RadarParament.fc;
 
 RadarParament.Rres         = c/2/RadarParament.Buse;   %雷达理论的距离分辨率

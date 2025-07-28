@@ -1,7 +1,7 @@
-function   [RangeFFTout, DopplerFFTout] = PrintfPic(DataIn, RadarParament, PrintfParament, FrameIdx)
+function   [RangeFFTout, DopplerFFTout] = PrintfPic(DataIn, RadarParament, PrintfParament, FrameIdx, ChirpIdx)
 
 isReal            = RadarParament.IsReal;
-
+PrintfParament.ChirpIdx = ChirpIdx;
 %----------距离FFT----------%
 RangeFFTout = fft(DataIn,[],1);                     %没有加窗
 %----------速度FFT----------%
