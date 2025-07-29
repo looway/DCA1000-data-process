@@ -6,16 +6,16 @@ clear; close all; clc;
 [PrintfParament] = PrintfParamentsConfig;
 
 %---------数据文件路径--------%
-datafolder  = 'D:\000-Project\001-Matlab\000-RawData\data';
-binfileName = '001.bin';
+datafolder  = 'E:\project\data';
+binfileName = '002.bin';
 binfilePath = strcat(datafolder,'\',binfileName);
 
-frameIdx = 1;
+% frameIdx = 256;
 ChirpIdx = 1;
 
 %-------一帧一帧处理--------%
 for frameIdx = 1:RadarParament.Numframe
-     for ChirpIdx = 1 : RadarParament.NumLoop_TDM
+     % for ChirpIdx = 1 : RadarParament.NumLoop_TDM
         [ADCdata] = DataParsing(binfilePath, RadarParament, frameIdx); 
         % [ADCdata] = readDCA1000(binfilePath, RadarParament, frameIdx);
         
@@ -23,6 +23,6 @@ for frameIdx = 1:RadarParament.Numframe
 
         [RangeFFTout_TDM, DopplerFFTout_TDM] = PrintfPic(ADCdata_TDM, RadarParament, PrintfParamentsConfig, frameIdx, ChirpIdx);
 
-     end
+     % end
 end
 

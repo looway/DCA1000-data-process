@@ -8,22 +8,36 @@ numRX             = RadarParament.NumRx;
 numBits           = RadarParament.NumBits;
 isReal            = RadarParament.IsReal;
 
-%一帧数量:128(chirps) * 4(Rx) * 2(adc) * 256(samples) * 2(complex)
-Expected_Num_SamplesPerFrame = numSamplePerChirp*numLoops*numRX * 2;  %理论上的全部的个数
-fp       = fopen(fileFullPath, 'r');
 
+% 计算一帧的预期样本数（uint16 单位）
 if isReal == 1
-    fseek(fp,(frameIdx-1)*Expected_Num_SamplesPerFrame*2, 'bof');       %ADC位数为16位，所以两个u8
-elseif isReal == 0
-    fseek(fp,(frameIdx-1)*Expected_Num_SamplesPerFrame*2*2, 'bof');     %ADC位数为16位，且为复数，需要两个2*2个u8
+    Expected_Num_SamplesPerFrame = numSamplePerChirp * numLoops * numRX; % 实数数据
+else
+    Expected_Num_SamplesPerFrame = numSamplePerChirp * numLoops * numRX * 2; % 复数数据（实部+虚部）
 end
-DataTmp  = fread(fp,Expected_Num_SamplesPerFrame,'uint16');         %拿出这么多数据来
+
+% 打开文件
+fp = fopen(fileFullPath, 'r');
+if fp == -1
+    error('无法打开文件：%s', fileFullPath);
+end
+
+% 定位到指定帧的起始字节
+    fseek(fp, (frameIdx-1) * Expected_Num_SamplesPerFrame * 2, 'bof'); % 每个 uint16 占 2 字节
+% 读取数据
+DataTmp = fread(fp, Expected_Num_SamplesPerFrame, 'uint16');
+if length(DataTmp) ~= Expected_Num_SamplesPerFrame
+    fclose(fp);
+    error('读取数据量 %d 不等于预期 %d，请检查文件或参数', length(DataTmp), Expected_Num_SamplesPerFrame);
+end
+
+% 关闭文件
+fclose(fp);
 
 %格式解析
 neg                = logical(bitget(DataTmp, numBits));             %最高位为符号位
 DataTmp(neg)       = DataTmp(neg) - 2^(numBits);                    %首位为1表示为负数，此时需要减去2^16;
 
-fclose(fp);
 
 fileSize = size(DataTmp, 1);                            %计算数据量大小
 
@@ -35,7 +49,7 @@ if isReal == 1
 
 else
     numChirps = round(fileSize/numSamplePerChirp/numRX/2);  %计算chirp数量
-    fprintf("numChirps = %d\n", numChirps);
+    assert(numChirps == numLoops, 'numChirps (%d) 不等于 numLoops (%d)，请检查数据或参数设置', numChirps, numLoops);
     %1642数据格式为非交织
     datatmp2 = zeros(1, (fileSize/2)); 
     counter = 1;
@@ -58,7 +72,6 @@ end
 adcDataComplex = adcData;
 
 end
-
 
 
 
