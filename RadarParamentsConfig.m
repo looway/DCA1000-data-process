@@ -17,6 +17,8 @@ RadarParament.NumLoop_TDM  = 128;    %单帧下每个发射天线发射的chirp�
 RadarParament.NumBits      = 16;     %ADC数据的位数
 RadarParament.NumIQ        = 2;      %是否为IQ两路采样？
 
+RadarParament.AngleFFTNum  = 64;%角度FFT的点数
+
 RadarParament.Buse         = RadarParament.NumSample/RadarParament.fadc*RadarParament.chirpSlop;   %ADC采样的总带宽
 
 RadarParament.Tc           = RadarParament.ChirpT + RadarParament.Idletime; %前后发射的两个chirp之间的时长，这个值乘以发射天线数才是速度维度的采样周期。
@@ -25,7 +27,7 @@ RadarParament.Frametime    = RadarParament.Tc*RadarParament.NumLoop_TDM;    %单
 c                          = 3e8;
 RadarParament.fc           = 77e9; %Hz
 RadarParament.lambda       = c/RadarParament.fc;
-
+RadarParament.AntSep       = RadarParament.lambda/2;   %雷达的接收阵元间距是lambda/2
 RadarParament.Rres         = c/2/RadarParament.Buse;   %雷达理论的距离分辨率
 
 FIf                        = 5e6;   %雷达的中频带宽 2944-15MHz 1642-5MHz

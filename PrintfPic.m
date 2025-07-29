@@ -9,7 +9,7 @@ function [RangeFFTout, DopplerFFTout, AngleFFTout] = PrintfPic(DataIn, RadarPara
     DopplerFFTout = fftshift(fft(RangeFFTout, [], 2), 2); % 没有加窗
 
     %----------角度FFT----------%
-    AngleFFTout = fftshift(fft(DataIn, [], 3), 3); % 对虚拟通道维度进行 FFT 并 fftshift
+    AngleFFTout = fftshift( fft(RangeFFTout, RadarParament.AngleFFTNum, 3), 3 ); % 对虚拟通道维度进行 FFT 并 fftshift
 
     %----------chirp波形----------%
     if PrintfParament.ChirpMapEn == 1
@@ -64,9 +64,13 @@ function [RangeFFTout, DopplerFFTout, AngleFFTout] = PrintfPic(DataIn, RadarPara
         figure(4);
         % 提取某个 Chirp 的 Range-Angle 数据
         RAMap = abs(AngleFFTout(:, PrintfParament.ChirpIdx, :));
-        RAMap = squeeze(RAMap); % 维度 [numSamplePerChirp, numVirtualChannels]
+        RAMap = squeeze(RAMap); % 维度 [numSamplePerChirp, numAngleFFT]
+        d      = RadarParament.AntSep;                        % 天线间距
+        lambda = RadarParament.lambda;                        % 波长
+        numAngleFFT = RadarParament.AngleFFTNum;
         % 定义角度轴和距离轴
-        angles = linspace(-90, 90, size(RAMap, 2)); % 假设角度范围 -90° 到 90°
+        u = (-numAngleFFT/2 : numAngleFFT/2-1) / numAngleFFT; 
+        angles = asind( u * lambda / d );   % [deg]
         ranges = (1:RadarParament.Rangelen) * RadarParament.Rres;
         % 绘制 Range-Angle Map
         imagesc(angles, ranges, db(RAMap));
@@ -74,6 +78,24 @@ function [RangeFFTout, DopplerFFTout, AngleFFTout] = PrintfPic(DataIn, RadarPara
         xlabel('Angle (°)');
         ylabel('Range (m)');
         colorbar;
+
+        rangeMag   = abs( RangeFFTout(:, ChirpIdx, PrintfParament.AntennaIdx) );
+        [~, idxMax] = max( rangeMag );  
+        
+        % 2. 提取该 range bin 对应的角度谱
+        %    AngleFFTout 大小为 [Rangelen, numChirps, numVchans]
+        angleSpec = squeeze( abs( AngleFFTout(idxMax, ChirpIdx, :) ) );  
+        
+        % 3. 定义角度轴（与上面 RAMap 中保持一致） 
+        
+        % 4. 绘制 angle spectrum
+        figure;
+        plot( angles, angleSpec );
+        grid on;
+        xlabel('Angle (°)');
+        ylabel('Amplitude');
+        title( sprintf('%dth Frame %dth Chirp: Range bin %d Angle Spectrum', ...
+                       FrameIdx, ChirpIdx, idxMax) );
     end
 
 end
