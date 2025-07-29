@@ -4,8 +4,9 @@ function [PrintfParament] = PrintfParamentsConfig
     PrintfParament.ChirpIdx         = 1;
     PrintfParament.AntennaIdx       = 1;
     PrintfParament.ChirpMapEn       = 1;
-    PrintfParament.RangeMapEn       = 0;
-    PrintfParament.RDMapEn          = 0;
+    PrintfParament.RangeMapEn       = 1;
+    PrintfParament.RDMapEn          = 1;
+    PrintfParament.RAMapEn          = 1;
 
 
 end

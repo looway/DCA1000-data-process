@@ -10,7 +10,7 @@ datafolder  = 'E:\project\data';
 binfileName = '002.bin';
 binfilePath = strcat(datafolder,'\',binfileName);
 
-% frameIdx = 256;
+% frameIdx = 510;
 ChirpIdx = 1;
 
 %-------一帧一帧处理--------%
@@ -21,7 +21,7 @@ for frameIdx = 1:RadarParament.Numframe
         
         [ADCdata_TDM, RadarParament.Rangelen, RadarParament.dopperlen] = DataSeperate(ADCdata, RadarParament);
 
-        [RangeFFTout_TDM, DopplerFFTout_TDM] = PrintfPic(ADCdata_TDM, RadarParament, PrintfParamentsConfig, frameIdx, ChirpIdx);
+        [RangeFFTout_TDM, DopplerFFTout_TDM, AngleFFTout_TDM] = PrintfPic(ADCdata_TDM, RadarParament, PrintfParamentsConfig, frameIdx, ChirpIdx);
 
      % end
 end

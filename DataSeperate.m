@@ -18,20 +18,11 @@ function [DataOut_virtual, RangeLen, DopplerLen] = DataSeperate(DataIN, RadarPar
     numLoops = RadarParament.NumLoop_TDM;        % 总 chirp 数量
     numRX = RadarParament.NumRx;                 % 接收天线数量
     NumTx = RadarParament.NumTx;                 % 发射天线数量
-    isReal = RadarParament.IsReal;               % 是否为实数数据
 
     % 计算每个发射天线的 chirp 数量
     M = numLoops / NumTx;                        % 每个 Tx 的 chirp 数量
     assert(mod(numLoops, NumTx) == 0, 'numLoops 必须是 NumTx 的整数倍');
-
-    % 初始数据重塑
-    if isReal == 1
-        % 实数数据处理（直接重塑）
-        DataOut = reshape(DataIN.', numSamplePerChirp, numLoops, numRX);
-    else
-        % 复数数据处理（转置后重塑）
-        DataOut = reshape(DataIN.', numSamplePerChirp, numLoops, numRX);
-    end
+    DataOut = reshape(DataIN.', numSamplePerChirp, numLoops, numRX);
 
     % 获取输出维度
     [RangeLen, ~, ~] = size(DataOut); 
